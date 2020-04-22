@@ -19,6 +19,8 @@ class AuthTest extends TestCase
         $data = [
             'email' => 'test@qq.com',
             'username' => 'test',
+            'first_name' => 'test',
+            'last_name' => 'test',
             'password' => '123456',
         ];
         //Send post request

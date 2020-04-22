@@ -19,7 +19,7 @@ class UserController extends Controller
      */
     public function __construct(UserRepositoryContract $user)
     {
-        // $this->middleware('auth:api', ['except' => ['login', 'list', 'delete', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'list', 'register']]);
         $this->user = $user;
     }
     /**
@@ -32,10 +32,12 @@ class UserController extends Controller
     public function login(UserLoginRequest $request, UserServiceContract $userService)
     {
         $userService->checkLogin($request->username, $request->password);
-        $user = $request->user();
 
-        if (!empty($user) && ($token = \JWTAuth::fromUser($user))) {
-            return $this->respondWithToken($token);
+        if ($user = $request->user()) {
+            return response()->json([
+                'access_token' => $user->createToken('Personal Access Token')->accessToken,
+                'token_type' => 'bearer'
+            ]);
         } else {
             return response()->json([
                 'errors' => trans('auth.failed')
@@ -51,9 +53,11 @@ class UserController extends Controller
     public function register(UserRegisterRequest $request)
     {
         $user = $this->user->createUser($request->all());
-        $token = auth('api')->login($user);
 
-        return $this->respondWithToken($token);
+        return response()->json([
+            'access_token' => $user->createToken('Personal Access Token')->accessToken,
+            'token_type' => 'bearer'
+        ], Response::HTTP_CREATED);
     }
     /**
      * Log the user out (Invalidate the token).
@@ -62,8 +66,22 @@ class UserController extends Controller
      */
     public function logout()
     {
-        auth()->logout();
+        if(auth()->guard('api')->check()) {
+            auth()->user()->token()->revoke();
+            auth()->guard('api')->user()->token()->delete();
+        }
+
         return response()->json(['message' => 'Successfully logged out']);
+    }
+
+    /**
+     * Get the authenticated User
+     *
+     * @return [json] user object
+     */
+    public function user()
+    {
+        return response()->json(auth()->user());
     }
     
     public function list()
@@ -87,31 +105,5 @@ class UserController extends Controller
         $user->delete();
 
         return response()->json($this->user->getAllUsers());
-    }
-
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function refresh()
-    {
-        return $this->respondWithToken(auth()->refresh());
-    }
-
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function respondWithToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60
-        ]);
     }
 }

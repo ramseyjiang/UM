@@ -15,9 +15,11 @@ use Illuminate\Http\Request;
 
 Route::post('register', 'Api\UserController@register');
 Route::post('login', 'Api\UserController@login');
+Route::get('user', 'Api\UserController@user');
+Route::get('logout', 'Api\UserController@logout');
+
 Route::get('list', 'Api\UserController@list');
 Route::post('create', 'Api\UserController@store');
 Route::put('update/{userId}', 'Api\UserController@update');
 Route::delete('delete/{userId}', 'Api\UserController@destroy');
-Route::get('logout', 'Api\UserController@logout');
-Route::post('refresh', 'Api\UserController@refresh');
+

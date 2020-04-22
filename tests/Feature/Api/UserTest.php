@@ -18,14 +18,15 @@ class UserTest extends TestCase
             'email' => 'test@qq.com',
             'first_name' => 'test',
             'last_name' => 'test',
+            'is_admin' => '0',
             'username' => 'test',
             'password' => '123456',
         ];
 
         $response = $this->post('api/register', $data);
-        
-        $response->assertStatus(Response::HTTP_OK)
-                 ->assertJsonStructure([ 'access_token', 'token_type', 'expires_in']);
+
+        $response->assertStatus(Response::HTTP_CREATED)
+                 ->assertJsonStructure([ 'access_token', 'token_type']);
 
         $this->assertDatabaseHas('users', [
             'email'  => $data['email'],
@@ -42,13 +43,15 @@ class UserTest extends TestCase
      */
     public function testApiLoginByUsername()
     {
+        $user = $this->createUser();
+
         $response = $this->post('api/login', [
-            'username'    => 'test',
+            'username'    => $user->username,
             'password' => '123456'
         ]);
 
         $response->assertStatus(Response::HTTP_OK)
-                 ->assertJsonStructure([ 'access_token', 'token_type', 'expires_in']);
+                 ->assertJsonStructure([ 'access_token', 'token_type']);
     }
     
     public function testApiUsernameLoginFail()
@@ -65,41 +68,22 @@ class UserTest extends TestCase
 
     public function testLogout()
     {
-        $user = User::first();
-
-        $token = \JWTAuth::fromUser($user);
-        $this->get('api/logout?token=' . $token)
+        $this->get('api/logout', $this->headers())
         ->assertStatus(Response::HTTP_OK)
         ->assertJsonStructure(['message']);
-
-        $this->assertGuest('api');
     }
 
-    // public function testUser()
-    // {
-    //     $url = 'api/user';
-
-    //     // Test unauthenticated access.
-    //     $this->get($url, $this->headers())
-    //     ->assertStatus(Response::HTTP_FOUND);
-
-    //     // Test authenticated access.
-    //     $this->get($url, $this->headers(User::first()))
-    //     ->assertStatus(Response::HTTP_OK)
-    //     ->assertJsonStructure([ 'id', 'first_name', 'last_name', 'username', 'email']);
-    // }
-
-    public function testRefresh()
+    public function testUser()
     {
-        $url = 'api/refresh';
+        $url = 'api/user';
 
         // Test unauthenticated access.
-        $this->post($url, $this->headers())
+        $this->get($url)
         ->assertStatus(Response::HTTP_FOUND);
 
         // Test authenticated access.
-        $this->post($url, $this->headers(User::first()))
+        $this->get($url, $this->headers())
         ->assertStatus(Response::HTTP_OK)
-        ->assertJsonStructure([ 'access_token', 'token_type', 'expires_in']);
+        ->assertJsonStructure([ 'id', 'first_name', 'last_name', 'username', 'email']);
     }
 }

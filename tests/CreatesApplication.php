@@ -28,8 +28,9 @@ trait CreatesApplication
             'username' => $qq,
             'first_name' => $qq,
             'last_name' => $qq,
+            'is_admin' => 0,
             'email' => $qq . '@qq.com',
-            'password' => '12345678',
+            'password' => '123456',
         ];
         return \Um\Models\User::create($data);
     }
@@ -60,13 +61,13 @@ trait CreatesApplication
      */
     protected function headers($user = null)
     {
-        $headers = ['Accept' => 'application/json'];
-        if (!is_null($user)) {
-            $token = \JWTAuth::fromUser($user);
-            \JWTAuth::setToken($token);
-            $headers['token'] = $token;
+        if (is_null($user)) {
+            $user = User::first();
         }
 
-        return $headers;
+        return [
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $user->createToken('Personal Access Token')->accessToken,
+        ];
     }
 }
