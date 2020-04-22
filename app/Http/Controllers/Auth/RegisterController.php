@@ -2,7 +2,7 @@
 
 namespace Um\Http\Controllers\Auth;
 
-use Um\User;
+use Um\Models\User;
 use Um\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
