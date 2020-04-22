@@ -2,7 +2,6 @@
 
 namespace Um\Http\Controllers\Auth;
 
-use Um\Models\User;
 use Um\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Um\Http\Requests\UserRegisterRequest;
