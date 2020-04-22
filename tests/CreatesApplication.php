@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Illuminate\Contracts\Console\Kernel;
+use Um\Models\User;
 
 trait CreatesApplication
 {
@@ -47,10 +48,25 @@ trait CreatesApplication
      */
     public function loginAsUser($user = null)
     {
-        if (!$user) {
-            $user = $this->createUser();
-        }
+        $user = User::first();
         $this->actingAs($user);
         return $user;
+    }
+
+    /**
+     * Return request headers needed to interact with the API.
+     *
+     * @return Array array of headers.
+     */
+    protected function headers($user = null)
+    {
+        $headers = ['Accept' => 'application/json'];
+        if (!is_null($user)) {
+            $token = \JWTAuth::fromUser($user);
+            \JWTAuth::setToken($token);
+            $headers['token'] = $token;
+        }
+
+        return $headers;
     }
 }

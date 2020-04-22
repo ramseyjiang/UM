@@ -37,8 +37,8 @@ class UserRepository implements UserRepositoryContract
     public function createUser(array $data)
     {
         return User::create([
-            'first_name' => 123,
-            'last_name' => 12333,
+            'first_name' => 'test',
+            'last_name' => 'test',
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => $data['password'],
