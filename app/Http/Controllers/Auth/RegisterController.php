@@ -4,10 +4,10 @@ namespace Um\Http\Controllers\Auth;
 
 use Um\Models\User;
 use Um\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Um\Http\Requests\UserRegisterRequest;
 use Illuminate\Auth\Events\Registered; 
+use Um\Services\UserService;  
 
 class RegisterController extends Controller
 {
@@ -32,13 +32,19 @@ class RegisterController extends Controller
     protected $redirectTo = '/home';
 
     /**
+     * @var UserService
+     */
+    protected $userService;
+
+    /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(UserService $userService)
     {
         $this->middleware('guest');
+        $this->userService = $userService;
     }
 
     /**
@@ -52,29 +58,10 @@ class RegisterController extends Controller
         $request->validated();
 
         //Registered is a class can be rewriten after successful registered. Event is similar as a listenr.
-        event(new Registered($user = $this->create($request->all()))); 
+        event(new Registered($user = $this->userService->createUser($request->all()))); 
 
         $this->guard()->login($user);
 
-        return $this->registered($request, $user)
-                        ?: redirect($this->redirectPath());
-    }
-
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return \Um\Models\User
-     */
-    protected function create(array $data)
-    {
-        return User::create([
-            'username' => $data['username'],
-            'first_name' => 1,
-            'last_name' => 1,
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'is_admin' => 0
-        ]);
+        return $this->registered($request, $user) ?: redirect($this->redirectPath());
     }
 }
