@@ -86,4 +86,12 @@ class UserTest extends TestCase
         ->assertStatus(Response::HTTP_OK)
         ->assertJsonStructure([ 'id', 'first_name', 'last_name', 'username', 'email']);
     }
+
+    public function testList()
+    {
+        $url = 'api/list';
+
+        $this->get($url)
+        ->assertStatus(Response::HTTP_OK);
+    }
 }
