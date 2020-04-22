@@ -19,7 +19,7 @@ class UserController extends Controller
      */
     public function __construct(UserRepositoryContract $user)
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        // $this->middleware('auth:api', ['except' => ['login', 'list', 'delete', 'register']]);
         $this->user = $user;
     }
     /**
@@ -65,15 +65,28 @@ class UserController extends Controller
         auth()->logout();
         return response()->json(['message' => 'Successfully logged out']);
     }
-    /**
-     * Get the authenticated User
-     *
-     * @return [json] user object
-     */
-    public function user()
+    
+    public function list()
     {
-        // var_dump(auth()->user());die;
-        // return response()->json(auth()->user());
+        return response()->json($this->user->getAllUsers());
+    }
+
+    public function store(UserRegisterRequest $request)
+    {
+        return response()->json($this->user->createUser($request->all()));
+    }
+
+    public function update(UserRegisterRequest $request, int $userId)
+    {
+        return response()->json($this->user->updateUser($request->all(), $userId));
+    }
+
+    public function destroy(int $userId)
+    {
+        $user = $this->user->getUser($userId);
+        $user->delete();
+
+        return response()->json($this->user->getAllUsers());
     }
 
     /**

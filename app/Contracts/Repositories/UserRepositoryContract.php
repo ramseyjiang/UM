@@ -33,7 +33,7 @@ interface UserRepositoryContract
      * @param array $data
      * @return void
      */
-    public function updateUser(array $data);
+    public function updateUser(array $data, int $userId);
 
     /**
      * Delete a user info by userId.

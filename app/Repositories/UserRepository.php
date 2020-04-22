@@ -14,7 +14,7 @@ class UserRepository implements UserRepositoryContract
      */
     public function getAllUsers()
     {
-
+        return User::orderBy('created_at', 'desc')->get();
     }
 
     /**
@@ -25,7 +25,7 @@ class UserRepository implements UserRepositoryContract
      */
     public function getUser(int $userId)
     {
-        return User::find($userId);
+        return User::findOrFail($userId);
     }
 
     /**
@@ -37,8 +37,9 @@ class UserRepository implements UserRepositoryContract
     public function createUser(array $data)
     {
         return User::create([
-            'first_name' => 'test',
-            'last_name' => 'test',
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
+            'is_admin' => $data['is_admin'],
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => $data['password'],
@@ -51,14 +52,17 @@ class UserRepository implements UserRepositoryContract
      * @param array $data
      * @return void
      */
-    public function updateUser(array $data)
+    public function updateUser(array $data, int $userId)
     {
-        // return User::create([
-        //     'name' => $data['name'],
-        //     'username' => $data['username'],
-        //     'email' => $data['email'],
-        //     'password' => $data['password'],
-        // ]);
+        return User::where('id', $userId)
+        ->update([
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
+            'is_admin' => $data['is_admin'],
+            'username' => $data['username'],
+            'email' => $data['email'],
+            'password' => $data['password'],
+        ]);
     }
 
     public function deleteUser(int $id)
