@@ -5,8 +5,7 @@ namespace Um\Http\Controllers\Auth;
 use Um\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Um\Http\Requests\UserRegisterRequest;
-use Illuminate\Auth\Events\Registered; 
-use Um\Services\UserService;  
+use Um\Contracts\Repositories\UserRepositoryContract;
 
 class RegisterController extends Controller
 {
@@ -31,36 +30,22 @@ class RegisterController extends Controller
     protected $redirectTo = '/home';
 
     /**
-     * @var UserService
-     */
-    protected $userService;
-
-    /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(UserService $userService)
+    public function __construct(UserRepositoryContract $user)
     {
         $this->middleware('guest');
-        $this->userService = $userService;
+        $this->user = $user;
     }
 
-    /**
-     * It is used to rewrite a register function in RegistersUsers.
-     *
-     * @param  Features\Http\Requests\UserRegisterRequest  $request
-     * @return \Illuminate\Http\Response
-     */
     public function register(UserRegisterRequest $request)
     {
-        $request->validated();
-
-        //Registered is a class can be rewriten after successful registered. Event is similar as a listenr.
-        event(new Registered($user = $this->userService->createUser($request->all()))); 
-
+        $user = $this->user->createUser($request->all());
         $this->guard()->login($user);
 
-        return $this->registered($request, $user) ?: redirect($this->redirectPath());
+        return $this->registered($request, $user)
+                        ?: redirect($this->redirectPath());
     }
 }

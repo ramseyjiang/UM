@@ -1,68 +1,20 @@
 <?php
-
 namespace Um\Services;
 
-use Um\Interfaces\UserInterface;
-use Um\Models\User;
-use Illuminate\Support\Facades\Hash;
+use Um\Contracts\Services\UserServiceContract;
+use Illuminate\Support\Facades\Auth;
 
-class UserService implements UserInterface
+class UserService implements UserServiceContract
 {
     /**
-     * Create a user.
+     * It is used to check username login.
      *
-     * @param array $data
+     * @param string $username
+     * @param string $password
      * @return void
      */
-    public function createUser(array $data)
+    public function checkLogin(string $username, string $password)
     {
-        return User::create([
-            'username' => $data['username'],
-            'first_name' => 1,
-            'last_name' => 1,
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'is_admin' => 0
-        ]);
-    }
-
-    /**
-     * Get all users info.
-     *
-     * @return void
-     */
-    public function getAllUsers()
-    {
-
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getUser(int $userId)
-    {
-
-    }
-
-    /**
-     * Update a user info.
-     *
-     * @param array $data
-     * @return void
-     */
-    public function updateUser(array $data)
-    {
-
-    }
-
-    /**
-     * Delete a user info by userId.
-     *
-     * @param integer $userId
-     * @return void
-     */
-    public function deleteUser(int $userId)
-    {
-
+        Auth::attempt(['username' => $username, 'password' => $password]);
     }
 }

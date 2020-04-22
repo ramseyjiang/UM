@@ -1,8 +1,8 @@
 <?php
 
-namespace Um\Interfaces;
+namespace Um\Contracts\Repositories;
 
-interface UserInterface
+interface UserRepositoryContract
 {
     /**
      * Get all users info.
