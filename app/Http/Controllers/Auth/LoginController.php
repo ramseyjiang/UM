@@ -43,12 +43,11 @@ class LoginController extends Controller
      * Rewrite login function in AuthenticatesUsers class for username or password login.
      *
      * @param UserLoginRequest $request
-     * @param UserServiceContract $userService
      * @return void
      */
-    public function login(UserLoginRequest $request, UserServiceContract $userService)
+    public function login(UserLoginRequest $request)
     {
-        $userService->checkLogin($request->username, $request->password);
+        // $userService->checkLogin($request->username, $request->password);
         
         if ($request->user()) {
             return $this->sendLoginResponse($request);

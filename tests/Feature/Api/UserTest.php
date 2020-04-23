@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
 use Um\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserTest extends TestCase
 {
@@ -15,18 +16,18 @@ class UserTest extends TestCase
         $this->deleteUser();
 
         $data = [
-            'email' => 'finalTest@qq.com',
-            'first_name' => 'finalTest',
-            'last_name' => 'finalTest',
+            'email' => 'test@qq.com',
+            'first_name' => 'test',
+            'last_name' => 'test',
             'is_admin' => '0',
-            'username' => 'finalTest',
+            'username' => 'test',
             'password' => '123456',
         ];
 
         $response = $this->post('api/register', $data);
 
         $response->assertStatus(Response::HTTP_CREATED)
-                 ->assertJsonStructure([ 'access_token', 'token_type']);
+                 ->assertJsonStructure([ 'access_token', 'token_type', 'isAdmin']);
 
         $this->assertDatabaseHas('users', [
             'email'  => $data['email'],
@@ -43,15 +44,14 @@ class UserTest extends TestCase
      */
     public function testApiLoginByUsername()
     {
-        $user = $this->createUser();
-
-        $response = $this->post('api/login', [
-            'username'    => $user->username,
+        $data = [
+            'username' => 'test',
             'password' => '123456'
-        ]);
+        ];
+        $response = $this->post('api/login', $data);
 
-        $response->assertStatus(Response::HTTP_OK)
-                 ->assertJsonStructure([ 'access_token', 'token_type']);
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+                //  ->assertJsonStructure([ 'access_token', 'token_type', 'isAdmin']);
     }
     
     public function testApiUsernameLoginFail()

@@ -17,8 +17,8 @@ class AuthTest extends TestCase
     public function testRegister()
     {
         $data = [
-            'email' => 'test@qq.com',
-            'username' => 'test',
+            'email' => mt_rand(1, 10000) . '@qq.com',
+            'username' => mt_rand(1, 10000),
             'first_name' => 'test',
             'last_name' => 'test',
             'password' => '123456',
@@ -42,7 +42,7 @@ class AuthTest extends TestCase
         //attempt login
         $response = $this->call('POST', route('login'),[
             'username' => $user->username,
-            'password' => '12345678',
+            'password' => '123456',
         ]);
         //Assert it was successful and a token was received
         $response->assertStatus(Response::HTTP_FOUND);
