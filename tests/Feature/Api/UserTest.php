@@ -15,11 +15,11 @@ class UserTest extends TestCase
         $this->deleteUser();
 
         $data = [
-            'email' => 'test@qq.com',
-            'first_name' => 'test',
-            'last_name' => 'test',
+            'email' => 'finalTest@qq.com',
+            'first_name' => 'finalTest',
+            'last_name' => 'finalTest',
             'is_admin' => '0',
-            'username' => 'test',
+            'username' => 'finalTest',
             'password' => '123456',
         ];
 
