@@ -36,7 +36,8 @@ class UserController extends Controller
         if ($user = $request->user()) {
             return response()->json([
                 'access_token' => $user->createToken('Personal Access Token')->accessToken,
-                'token_type' => 'bearer'
+                'token_type' => 'bearer',
+                'isAdmin' => $user->is_admin
             ]);
         } else {
             return response()->json([
@@ -56,7 +57,8 @@ class UserController extends Controller
 
         return response()->json([
             'access_token' => $user->createToken('Personal Access Token')->accessToken,
-            'token_type' => 'bearer'
+            'token_type' => 'bearer',
+            'isAdmin' => $user->is_admin
         ], Response::HTTP_CREATED);
     }
     /**
