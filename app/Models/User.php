@@ -49,10 +49,6 @@ class User extends Authenticatable
         return [];
     }
 
-    public function setUsernameAttribute($value) {
-        $this->attributes['username'] = ucfirst($value);
-    }
-
     public function setPasswordAttribute($password)
     {   
         $this->attributes['password'] = Hash::make($password);
