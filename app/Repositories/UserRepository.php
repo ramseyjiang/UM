@@ -4,6 +4,7 @@ namespace Um\Repositories;
 
 use Um\Contracts\Repositories\UserRepositoryContract;
 use Um\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements UserRepositoryContract
 {
@@ -42,7 +43,7 @@ class UserRepository implements UserRepositoryContract
             'is_admin' => $data['is_admin'],
             'username' => $data['username'],
             'email' => $data['email'],
-            'password' => $data['password']
+            'password' => Hash::make($data['password'])
         ]);
     }
 
@@ -61,7 +62,7 @@ class UserRepository implements UserRepositoryContract
             'is_admin' => $data['is_admin'] === 'on' ? 1 : 0,
             // 'username' => $data['username'], //When update a use info username in this version, it cannot be update.
             // 'email' => $data['email'],   //When update a use info email in this version, it cannot be update.
-            'password' => $data['password']
+            'password' => Hash::make($data['password'])
         ]);
     }
 
