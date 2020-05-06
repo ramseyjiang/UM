@@ -91,7 +91,7 @@ class UserTest extends TestCase
     {
         $url = 'api/list';
 
-        $this->get($url)
+        $this->get($url, $this->headers())
         ->assertStatus(Response::HTTP_OK);
     }
 }
