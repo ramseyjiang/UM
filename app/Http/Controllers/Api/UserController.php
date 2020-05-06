@@ -8,6 +8,7 @@ use Um\Http\Requests\UserLoginRequest;
 use Um\Http\Requests\UserRegisterRequest;
 use Um\Contracts\Repositories\UserRepositoryContract;
 use Um\Contracts\Services\UserServiceContract;
+use Auth;
 
 class UserController extends Controller
 {
@@ -108,14 +109,18 @@ class UserController extends Controller
 
     public function update(UserRegisterRequest $request, int $userId)
     {
+        $user = Auth::user();
+        $this->authorize('match', $user);
         return response()->json($this->user->updateUser($request->all(), $userId));
     }
 
     public function destroy(int $userId)
     {
-        $user = $this->user->getUser($userId);
-        $user->delete();
+        $user = Auth::user();
+        $this->authorize('match', $user);
+        $targetUser = $this->user->getUser($userId);
+        $targetUser->delete();
 
-        return response()->json($this->user->getAllUsers());
+        return response()->json($this->targetUser->getAllUsers());
     }
 }
