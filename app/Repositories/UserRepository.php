@@ -59,10 +59,10 @@ class UserRepository implements UserRepositoryContract
         ->update([
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
-            'is_admin' => $data['is_admin'] === 'on' ? 1 : 0,
+            'is_admin' => $data['is_admin'],
             // 'username' => $data['username'], //When update a use info username in this version, it cannot be update.
             // 'email' => $data['email'],   //When update a use info email in this version, it cannot be update.
-            'password' => Hash::make($data['password'])
+            'password' => $data['password']
         ]);
     }
 
