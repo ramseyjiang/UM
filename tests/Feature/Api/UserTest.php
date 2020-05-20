@@ -50,8 +50,8 @@ class UserTest extends TestCase
         ];
         $response = $this->post('api/login', $data);
 
-        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
-                //  ->assertJsonStructure([ 'access_token', 'token_type', 'isAdmin']);
+        $response->assertStatus(Response::HTTP_OK)
+                 ->assertJsonStructure([ 'access_token', 'token_type', 'isAdmin']);
     }
     
     public function testApiUsernameLoginFail()
