@@ -99,7 +99,7 @@ class UserController extends Controller
     
     public function list()
     {
-        var_dump(Auth::user(), $this->user);
+        var_dump(Auth::user()->id, $this->user->id);
         return response()->json($this->user->getAllUsers());
     }
 
