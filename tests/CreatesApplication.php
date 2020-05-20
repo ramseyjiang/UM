@@ -64,7 +64,7 @@ trait CreatesApplication
         if (is_null($user)) {
             $user = User::first();
         }
-
+var_dump($user->createToken('Personal Access Token')->accessToken);
         return [
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $user->createToken('Personal Access Token')->accessToken,
