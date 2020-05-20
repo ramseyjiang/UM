@@ -59,6 +59,8 @@ class UserController extends Controller
         $user = $this->user->createUser($request->all());
 
         try{
+            $this->guard()->login($user);
+            
             return response()->json([
                 'status' => 'ok',
                 'access_token' => $user->createToken('Personal Access Token')->accessToken,
