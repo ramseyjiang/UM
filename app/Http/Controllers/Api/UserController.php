@@ -32,16 +32,15 @@ class UserController extends Controller
      */
     public function login(UserLoginRequest $request, UserServiceContract $userService)
     {
-        var_dump($request->username, $request->password, $userService->checkLogin($request->username, $request->password));
-        // $userService->checkLogin($request->username, $request->password);
+        if($userService->checkLogin($request->username, $request->password)) {
+            $user = $request->user();
 
-        if ($user = $request->user()) {
             return response()->json([
                 'status' => 'ok',
                 'access_token' => $user->createToken('Personal Access Token')->accessToken,
                 'token_type' => 'bearer',
                 'isAdmin' => $user->is_admin
-            ]);
+            ], Response::HTTP_OK);
         } else {
             return response()->json([
                 'status' => 'fail',
