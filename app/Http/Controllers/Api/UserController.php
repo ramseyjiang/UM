@@ -32,7 +32,7 @@ class UserController extends Controller
      */
     public function login(UserLoginRequest $request, UserServiceContract $userService)
     {
-        var_dump($userService->checkLogin($request->username, $request->password));
+        var_dump($request->username, $request->password, $userService->checkLogin($request->username, $request->password));
         // $userService->checkLogin($request->username, $request->password);
 
         if ($user = $request->user()) {
