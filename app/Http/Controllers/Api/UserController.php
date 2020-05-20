@@ -20,7 +20,7 @@ class UserController extends Controller
      */
     public function __construct(UserRepositoryContract $user)
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'list', 'register']]);
         $this->user = $user;
     }
     /**
@@ -59,8 +59,6 @@ class UserController extends Controller
         $user = $this->user->createUser($request->all());
 
         try{
-            $this->guard()->login($user);
-            
             return response()->json([
                 'status' => 'ok',
                 'access_token' => $user->createToken('Personal Access Token')->accessToken,
