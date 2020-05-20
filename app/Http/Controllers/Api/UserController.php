@@ -20,7 +20,7 @@ class UserController extends Controller
      */
     public function __construct(UserRepositoryContract $user)
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'list', 'register']]);
         $this->user = $user;
     }
     /**
