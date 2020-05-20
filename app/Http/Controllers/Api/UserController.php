@@ -109,17 +109,18 @@ class UserController extends Controller
 
     public function update(UserRegisterRequest $request, int $userId)
     {
-        $user = Auth::user();
-        $this->authorize('match', $user);
+        // $user = Auth::user();
+        // $this->authorize('match', $user);
         return response()->json($this->user->updateUser($request->all(), $userId));
     }
 
     public function destroy(int $userId)
     {
         $user = Auth::user();
-        $this->authorize('match', $user);
-        $targetUser = $this->user->getUser($userId);
-        $targetUser->delete();
+        var_dump($user);
+        // $this->authorize('match', $user);
+        // $targetUser = $this->user->getUser($userId);
+        // $targetUser->delete();
 
         return response()->json($this->targetUser->getAllUsers());
     }
