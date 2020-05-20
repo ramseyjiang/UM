@@ -116,11 +116,11 @@ class UserController extends Controller
 
     public function destroy(int $userId)
     {
-        $user = Auth::user();
-        var_dump($user);
+        // $user = Auth::user();
+        // var_dump($user);
         // $this->authorize('match', $user);
-        // $targetUser = $this->user->getUser($userId);
-        // $targetUser->delete();
+        $targetUser = $this->user->getUser($userId);
+        $targetUser->delete();
 
         return response()->json($this->targetUser->getAllUsers());
     }
