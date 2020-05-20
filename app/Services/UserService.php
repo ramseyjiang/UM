@@ -15,6 +15,6 @@ class UserService implements UserServiceContract
      */
     public function checkLogin(string $username, string $password)
     {
-        Auth::attempt(['username' => $username, 'password' => $password]);
+        return Auth::attempt(['username' => $username, 'password' => $password]);
     }
 }
