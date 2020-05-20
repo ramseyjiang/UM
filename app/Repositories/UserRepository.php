@@ -43,7 +43,7 @@ class UserRepository implements UserRepositoryContract
             'is_admin' => $data['is_admin'],
             'username' => $data['username'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password'])
+            'password' => $data['password']
         ]);
     }
 
